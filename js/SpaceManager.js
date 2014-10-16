@@ -1,5 +1,5 @@
-var SpaceManager = function(walls) {
-  this.walls = walls;
+var SpaceManager = function() {
+  this.walls = [];
   this.normWalls = null;
 
   // flags
@@ -16,6 +16,7 @@ var SpaceManager = function(walls) {
   // epsilon constants
   this.snappingEpsilon = 30;
   this.axisAlignEpsilon = 20;
+  this.selectEpsilon = 10;
 };
 
 SpaceManager.prototype.addWall = function(wall) {
@@ -26,7 +27,7 @@ SpaceManager.prototype.addWall = function(wall) {
 };
 
 SpaceManager.prototype.selectWall = function(point) {
-  // TODO: fix the hacking
+  // TODO: fix the hacking please emma!
   var walls = this.walls;
   for (var i = 0, len = walls.length; i < len; ++i) {
     var w = walls[i];
@@ -34,10 +35,16 @@ SpaceManager.prototype.selectWall = function(point) {
 
     var j, width = 5;
     for (j = 0; j < width; ++j) {
-      if (slope === ((point.y - (w.p1.y + j))) / (point.x - w.p1.x)) return w; 
+      if (Math.abs(slope - ((point.y - (w.p1.y + j))) / (point.x - w.p1.x)) < this.selectEpsilon) return w; 
     }
     for (j = 0; j < width; ++j) {
-      if (slope === ((point.y - (w.p1.y - j))) / (point.x - w.p1.x)) return w; 
+      if (Math.abs(slope - ((point.y - (w.p1.y - j))) / (point.x - w.p1.x)) < this.selectEpsilon) return w; 
+    }
+    for (j = 0; j < width; ++j) {
+      if (Math.abs(slope - ((point.y - w.p1.y)) / (point.x - (w.p1.x + j))) < this.selectEpsilon) return w; 
+    }
+    for (j = 0; j < width; ++j) {
+      if (Math.abs(slope - ((point.y - w.p1.y)) / (point.x - (w.p1.x - j))) < this.selectEpsilon) return w; 
     }
   }
   return null;
@@ -77,23 +84,23 @@ SpaceManager.prototype.snapPointToWall = function(point) {
 
 SpaceManager.prototype.calcNormalizedWalls = function() {
   // copy the walls array to normWalls
-  this.normWalls = cloneWallsArray(this.walls);
+  this.normWalls = cloneWallArray(this.walls);
 
   // calc 2d max/min values
   var maxX = -Infinity, maxY = -Infinity;
   var minX = Infinity, minY = Infinity;
   for (i = 0, len = this.normWalls.length; i < len; ++i) {
     // determine max
-    if (this.normWalls[i].p1.x > maxX) maxX = wall.p1.x;
-    if (this.normWalls[i].p2.x > maxX) maxX = wall.p2.x;
-    if (this.normWalls[i].p1.y > maxY) maxY = wall.p1.y;
-    if (this.normWalls[i].p2.y > maxY) maxY = wall.p2.y;
+    if (this.normWalls[i].p1.x > maxX) maxX = this.normWalls[i].p1.x;
+    if (this.normWalls[i].p2.x > maxX) maxX = this.normWalls[i].p2.x;
+    if (this.normWalls[i].p1.y > maxY) maxY = this.normWalls[i].p1.y;
+    if (this.normWalls[i].p2.y > maxY) maxY = this.normWalls[i].p2.y;
 
     // determine min
-    if (this.normWalls[i].p1.x < minX) minX = wall.p1.x;
-    if (this.normWalls[i].p2.x < minX) minX = wall.p2.x;
-    if (this.normWalls[i].p1.y < minY) minY = wall.p1.y;
-    if (this.normWalls[i].p2.y < minY) minY = wall.p2.y;
+    if (this.normWalls[i].p1.x < minX) minX = this.normWalls[i].p1.x;
+    if (this.normWalls[i].p2.x < minX) minX = this.normWalls[i].p2.x;
+    if (this.normWalls[i].p1.y < minY) minY = this.normWalls[i].p1.y;
+    if (this.normWalls[i].p2.y < minY) minY = this.normWalls[i].p2.y;
   }
   var rangeX = maxX - minX;
   if (!rangeX) {
@@ -106,13 +113,14 @@ SpaceManager.prototype.calcNormalizedWalls = function() {
     rangeY = 1;
     minY -= 1;
   }
+  var range = Math.max(rangeX, rangeY);
 
   // normalize points
   for (i = 0, len = this.normWalls.length; i < len; ++i) {
-    this.normWalls[i].p1.x = (wall.p1.x - minX) / rangeX;
-    this.normWalls[i].p2.x = (wall.p2.x - minX) / rangeX;
-    this.normWalls[i].p1.y = (wall.p1.y - minY) / rangeY;
-    this.normWalls[i].p2.y = (wall.p2.y - minY) / rangeY;
+    this.normWalls[i].p1.x = (this.normWalls[i].p1.x - minX) / range;
+    this.normWalls[i].p2.x = (this.normWalls[i].p2.x - minX) / range;
+    this.normWalls[i].p1.y = (this.normWalls[i].p1.y - minY) / range;
+    this.normWalls[i].p2.y = (this.normWalls[i].p2.y - minY) / range;
   }
 };
 

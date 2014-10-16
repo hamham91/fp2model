@@ -25,7 +25,8 @@ Wall.prototype.clone = function() {
 function cloneWallArray(walls) {
   var newWalls = [];
   for (var i = 0, len = walls.length; i < len; ++i) {
-    newWalls.push(walls[i].clone);
+    newWalls.push(walls[i].clone());
   }
-  return newWalls();
+  return newWalls;
 }
+

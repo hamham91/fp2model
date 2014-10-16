@@ -113,42 +113,10 @@ window.onload = function() {
     this.z = z;
   };
 
-  var wallList = [];
+  var spaceManager = new SpaceManager();
 
-  var isDrawing =  false;
   var startOfWall = null;
   var endOfWall = null;
-
-  function alignWall(wall) {
-    var EPSILON = 20;
-    if (Math.abs(wall.p1.x - wall.p2.x) < EPSILON) {
-      wall.p2.x = wall.p1.x;
-    }
-    if (Math.abs(wall.p1.y - wall.p2.y) < EPSILON) {
-      wall.p2.y = wall.p1.y;
-    }
-    return wall;
-  }
-
-  function cornerSnap(point, walls) {
-    var EPSILON = 30;
-    var cornerPoint = null;
-    for (var i = 0, len = walls.length; i < len; ++i) {
-      if (Math.abs(walls[i].p1.x - point.x) < EPSILON &&
-          Math.abs(walls[i].p1.y - point.y) < EPSILON) {
-        // snap to p1
-        cornerPoint = walls[i].p1;
-        break;
-      }
-      if (Math.abs(walls[i].p2.x - point.x) < EPSILON &&
-          Math.abs(walls[i].p2.y - point.y) < EPSILON) {
-        // snap to p2
-        cornerPoint = walls[i].p2;
-        break;
-      }
-    }
-    return cornerPoint ? cornerPoint : point;
-  }
 
   context.canvas.addEventListener('mousemove', function(e) {
     curMousePos = getMousePosition(e);
@@ -157,22 +125,23 @@ window.onload = function() {
   context.canvas.addEventListener('mousedown', function(e) {
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
-    startOfWall = new Point(mousePosition.x, mousePosition.y);
-    startOfWall = cornerSnap(startOfWall, wallList);
-    isDrawing = true;
+    startOfWall = spaceManager.snapPointToWall(new Point(mousePosition.x, mousePosition.y));
   });
 
   context.canvas.addEventListener('mouseup', function(e) {
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
-    endOfWall = new Point(mousePosition.x, mousePosition.y);
-    endOfWall = cornerSnap(endOfWall, wallList);
-    var newWall = new Wall(startOfWall, endOfWall);
-    newWall = alignWall(newWall);
-    isDrawing = false;
-    wallList.push(newWall);
+    endOfWall = spaceManager.snapPointToWall(new Point(mousePosition.x, mousePosition.y));
+    spaceManager.addWall(new Wall(startOfWall, endOfWall));
     document.getElementById('wall_list').innerHTML += "<li> Start[" + startOfWall.x + ", " + startOfWall.y + "] End[" + endOfWall.x + ", " + endOfWall.y + "] </li>"; 
     startOfWall = endOfWall = null;
+  });
+
+  context.canvas.addEventListener('click', function(e) {
+    if (currentMode !== modes.SELECT) return;
+    mousePosition = getMousePosition(e);
+    var wall = spaceManager.selectWall(mousePosition); 
+    console.log("SELECTED", wall);
   });
 
   function drawLine(p1, p2, color) {
@@ -185,10 +154,11 @@ window.onload = function() {
   }
 
   function drawWalls() {
+    var walls = spaceManager.getWalls();
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(img, 0, 0);
-    for (var i = 0, len = wallList.length; i < len; ++i) {
-      drawLine(wallList[i].p1, wallList[i].p2, "#ff0000");
+    for (var i = 0, len = walls.length; i < len; ++i) {
+      drawLine(walls[i].p1, walls[i].p2, "#ff0000");
     }
     if (startOfWall && !endOfWall) {
       drawLine(startOfWall, curMousePos, "#ff0000");
@@ -202,13 +172,8 @@ window.onload = function() {
   update();
 
   document.getElementById("gen_obj").onclick = function(e) {
-    var walls = normalizeWalls(wallList);
-    var verts = [], faces = [];
-    for (var i = 0, len = walls.length; i < len; ++i) {
-      makePlanes(walls[i], 0.4, verts, faces);
-    }
-    var objFile = createObj(verts, faces);
+    var objFile = spaceManager.exportObj();
     console.log(objFile);
-  }
+  };
 };
 
