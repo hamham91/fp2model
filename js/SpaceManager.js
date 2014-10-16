@@ -14,8 +14,8 @@ var SpaceManager = function() {
   this.wallWidth = 0.01;
 
   // epsilon constants
-  this.snappingEpsilon = 30;
-  this.axisAlignEpsilon = 20;
+  this.snappingEpsilon = 15;
+  this.axisAlignEpsilon = 15;
   this.selectEpsilon = 10;
 };
 

@@ -87,43 +87,11 @@ window.onload = function() {
     };
   }
 
-  function alignWall(wall) {
-    var EPSILON = 20;
-    if (Math.abs(wall.p1.x - wall.p2.x) < EPSILON) {
-      wall.p2.x = wall.p1.x;
-    }
-    if (Math.abs(wall.p1.y - wall.p2.y) < EPSILON) {
-      wall.p2.y = wall.p1.y;
-    }
-    return wall;
-  }
-
-  function cornerSnap(point, walls) {
-    var EPSILON = 30;
-    var cornerPoint = null;
-    for (var i = 0, len = walls.length; i < len; ++i) {
-      if (Math.abs(walls[i].p1.x - point.x) < EPSILON &&
-          Math.abs(walls[i].p1.y - point.y) < EPSILON) {
-        // snap to p1
-        cornerPoint = walls[i].p1;
-        break;
-      }
-      if (Math.abs(walls[i].p2.x - point.x) < EPSILON &&
-          Math.abs(walls[i].p2.y - point.y) < EPSILON) {
-        // snap to p2
-        cornerPoint = walls[i].p2;
-        break;
-      }
-    }
-    return cornerPoint ? cornerPoint : point;
-  }
-
   context.canvas.addEventListener('mousemove', function(e) {
     curMousePos = getMousePosition(e);
   });
 
   context.canvas.addEventListener('mousedown', function(e) {
-    console.log("mousedown");
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
     startOfLine = new Point(mousePosition.x, mousePosition.y);
@@ -131,16 +99,13 @@ window.onload = function() {
   });
 
   context.canvas.addEventListener('mouseup', function(e) {
-    console.log("mouseup");
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
 
     endOfLine = new Point(mousePosition.x, mousePosition.y);
     if (currentMode === modes.WALLS) {
-      console.log("NEW WALL");
       endOfLine = spaceManager.snapPointToWall(endOfLine);
       var newWall = new Wall(startOfLine, endOfLine);
-      newWall = alignWall(newWall);
       spaceManager.addWall(new Wall(startOfLine, endOfLine));
       document.getElementById('wall_list').innerHTML += "<li> Start[" + startOfLine.x + ", " + startOfLine.y + "] End[" + endOfLine.x + ", " + endOfLine.y + "] </li>"; 
     } else if (currentMode === modes.DOORS) {
