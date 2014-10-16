@@ -14,8 +14,9 @@ var SpaceManager = function() {
   this.wallWidth = 0.01;
 
   // epsilon constants
-  this.snappingEpsilon = 30;
-  this.axisAlignEpsilon = 20;
+  this.snappingEpsilon = 15;
+  this.axisAlignEpsilon = 15;
+  this.selectEpsilon = 10;
   this.selectEpsilon = 5;
 };
 
@@ -124,7 +125,7 @@ SpaceManager.prototype.calcVerts = function(wall, verts, faces) {
   verts.push(new Vec3(wall.p1.x, wall.p1.y, 0));
   verts.push(new Vec3(wall.p1.x, wall.p1.y, this.wallHeight));
   verts.push(new Vec3(wall.p2.x, wall.p2.y, 0)); 
-  verts.push(new Vec3(wall.p2.x, wall.p2.y, this.wallHeight)); 
+  verts.push(new Vec3(wall.p2.x, wall.p2.y, this.wallHeight));
 
   faces.push(new Vec3(offset + 1, offset + 3, offset + 2));
   faces.push(new Vec3(offset + 3, offset + 4, offset + 2));
