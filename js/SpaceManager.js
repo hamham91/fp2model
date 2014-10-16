@@ -16,7 +16,7 @@ var SpaceManager = function() {
   // epsilon constants
   this.snappingEpsilon = 30;
   this.axisAlignEpsilon = 20;
-  this.selectEpsilon = 10;
+  this.selectEpsilon = 5;
 };
 
 SpaceManager.prototype.addWall = function(wall) {
@@ -27,24 +27,18 @@ SpaceManager.prototype.addWall = function(wall) {
 };
 
 SpaceManager.prototype.selectWall = function(point) {
-  // TODO: fix the hacking please emma!
+  var e = this.selectEpsilon;
   var walls = this.walls;
   for (var i = 0, len = walls.length; i < len; ++i) {
     var w = walls[i];
-    var slope = (w.p1.y - w.p2.y) / (w.p2.x - w.p2.x);
-
-    var j, width = 5;
-    for (j = 0; j < width; ++j) {
-      if (Math.abs(slope - ((point.y - (w.p1.y + j))) / (point.x - w.p1.x)) < this.selectEpsilon) return w; 
-    }
-    for (j = 0; j < width; ++j) {
-      if (Math.abs(slope - ((point.y - (w.p1.y - j))) / (point.x - w.p1.x)) < this.selectEpsilon) return w; 
-    }
-    for (j = 0; j < width; ++j) {
-      if (Math.abs(slope - ((point.y - w.p1.y)) / (point.x - (w.p1.x + j))) < this.selectEpsilon) return w; 
-    }
-    for (j = 0; j < width; ++j) {
-      if (Math.abs(slope - ((point.y - w.p1.y)) / (point.x - (w.p1.x - j))) < this.selectEpsilon) return w; 
+    var upperLeft = (Math.min(w.p1.x, w.p2.x) === w.p1.x) ? w.p1.clone() : w.p2.clone();
+    upperLeft.x -= this.selectEpsilon;
+    upperLeft.y -= this.selectEpsilon;
+    var width = Math.abs(w.p1.x - w.p2.x) + (2 * e);
+    var height = Math.abs(w.p1.y - w.p2.y) + (2 * e);
+    if (point.x > upperLeft.x && point.x < upperLeft.x + width &&
+        point.y > upperLeft.y && point.y < upperLeft.y + height) {
+      return w;
     }
   }
   return null;
@@ -70,12 +64,12 @@ SpaceManager.prototype.snapPointToWall = function(point) {
   for (var i = 0, len = walls.length; i < len; ++i) {
     if (Math.abs(walls[i].p1.x - point.x) < this.snappingEpsilon &&
         Math.abs(walls[i].p1.y - point.y) < this.snappingEpsilon) {
-      snapPoint = walls[i].p1;
+      snapPoint = walls[i].p1.clone();
       break;
     }
     if (Math.abs(walls[i].p2.x - point.x) < this.snappingEpsilon &&
         Math.abs(walls[i].p2.y - point.y) < this.snappingEpsilon) {
-      snapPoint = walls[i].p2;
+      snapPoint = walls[i].p2.clone();
       break;
     }
   }
