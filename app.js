@@ -12,8 +12,6 @@ window.onload = function() {
   var currentMode = modes.SELECT;
   var curMousePos = { x: 0, y: 0 };
 
-  var wallList = [];
-
   var startOfLine = null;
   var endOfLine = null;
 
@@ -102,6 +100,8 @@ window.onload = function() {
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
 
+    var walls = spaceManager.getWalls();
+
     endOfLine = new Point(mousePosition.x, mousePosition.y);
     if (currentMode === modes.WALLS) {
       endOfLine = spaceManager.snapPointToWall(endOfLine);
@@ -110,10 +110,10 @@ window.onload = function() {
       document.getElementById('wall_list').innerHTML += "<li> Start[" + startOfLine.x + ", " + startOfLine.y + "] End[" + endOfLine.x + ", " + endOfLine.y + "] </li>"; 
     } else if (currentMode === modes.DOORS) {
       var newDoor = new Line(startOfLine, endOfLine);
-      wallList[0].doors.push(newDoor);
+      walls[0].doors.push(newDoor);
     } else if (currentMode === modes.WINDOWS) {
       var newWindow = new Line(startOfLine, endOfLine);
-      wallList[0].windows.push(newWindow);
+      walls[0].windows.push(newWindow);
     }
     startOfLine = endOfLine = null;
   });

@@ -130,7 +130,7 @@ SpaceManager.prototype.calcVerts = function(wall, verts, faces) {
   verts.push(new Vec3(wall.p1.x, wall.p1.y, 0));
   verts.push(new Vec3(wall.p1.x, wall.p1.y, this.wallHeight));
   verts.push(new Vec3(wall.p2.x, wall.p2.y, 0)); 
-  verts.push(new Vec3(wall.p2.x, wall.p2.y, this.wallHeight)); 
+  verts.push(new Vec3(wall.p2.x, wall.p2.y, this.wallHeight));
 
   faces.push(new Vec3(offset + 1, offset + 3, offset + 2));
   faces.push(new Vec3(offset + 3, offset + 4, offset + 2));
