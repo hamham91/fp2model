@@ -1,0 +1,52 @@
+.control {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.walls {
+  background-color: #f00;
+}
+.walls:hover, .walls-selected {
+  background-color: #600;
+}
+
+.doors {
+  background-color: #0f0;
+}
+.doors:hover, .doors-selected {
+  background-color: #060;
+}
+
+.windows {
+  background-color: #00f;
+}
+.windows:hover, .windows-selected {
+  background-color: #006;
+}
+
+.tools {
+  float: left;
+  width: 150px;
+}
+
+.floorplan {
+  float: none;
+}
+
+.export {
+  padding: 10px;
+}
+
+canvas {
+  border: 2px solid blue;
+  border-radius: 5px;
+}
+
+label {
+  margin-left: auto;
+  margin-right: auto;
+}
