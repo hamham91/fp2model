@@ -252,7 +252,8 @@ window.onload = function() {
 
   function loadOBJ() {
     var thickness = parseInt(document.getElementById("thickness").value);
-    spaceManager.wallWidth *= thickness;
+    spaceManager.wallWidth = thickness * 0.01;
+    spaceManager.wallWidth = spaceManager.wallWidth > 0 ? spaceManager.wallWidth : 0.01;
     objFile = spaceManager.exportObj();
     // console.log(objFile);
 
