@@ -200,6 +200,11 @@ window.onload = function() {
       context.stroke();
   }
 
+  var red = "rgba(255,0,200,0.7)"; //"#ff0000";
+  var green = "rgba(0,255,150,0.7)"; // "#00ff00";
+  var blue = "rgba(0,0,255,0.7)"; // "#0000ff";
+  var yellow = "rgba(255,255,0,0.7)"; // "#ffff00";
+
   function draw() {
     var walls = spaceManager.getWalls();
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -208,26 +213,26 @@ window.onload = function() {
     for (var i = 0; i < walls.length; i++) {
       wall = walls[i];
       if (i === selectedWall) {
-        drawLine(wall.line.p1, wall.line.p2, "#ffff00");
+        drawLine(wall.line.p1, wall.line.p2, yellow);
       } else {
-        drawLine(wall.line.p1, wall.line.p2, "#ff0000");
+        drawLine(wall.line.p1, wall.line.p2, red);
       }
       var j;
       for (j = 0; j < wall.doors.length; ++j) {
         door = wall.doors[j];
-        drawLine(door.p1, door.p2, "#00ff00");
+        drawLine(door.p1, door.p2, green);
       }
       for (j = 0; j < wall.windows.length; ++j) {
         win = wall.windows[j];
-        drawLine(win.p1, win.p2, "#0000ff");
+        drawLine(win.p1, win.p2, blue);
       }
     }
     if (startOfLine && !endOfLine) {
-      var color = "#ff0000";
+      var color = red;
       if (currentMode === modes.DOORS) {
-        color = "#00ff00";
+        color = green;
       } else if (currentMode === modes.WINDOWS) {
-        color = "#0000ff";
+        color = blue;
       }
       drawLine(startOfLine, curMousePos, color);
     }
@@ -245,7 +250,7 @@ window.onload = function() {
 
     var blob = new Blob([objFile]);
     document.getElementById("objDownload").href = URL.createObjectURL(blob);
-    
+
     // As soon as the OBJ has been loaded this function looks for a mesh
     // inside the data and applies the texture to it.
     loader.load( URL.createObjectURL(blob), function ( event ) {

@@ -12,29 +12,29 @@
 }
 
 .walls {
-  background-color: #f00;
+  background-color: #f0a;
   color: #fff;
 }
 .walls:hover, .walls-selected {
-  background-color: #600;
+  background-color: #603;
   cursor: pointer;
 }
 
 .doors {
-  background-color: #0f0;
+  background-color: #0f6;
   color: #fff;
 }
 .doors:hover, .doors-selected {
-  background-color: #060;
+  background-color: #061;
   cursor: pointer;
 }
 
 .windows {
-  background-color: #00f;
+  background-color: #60f;
   color: #fff;
 }
 .windows:hover, .windows-selected {
-  background-color: #006;
+  background-color: #106;
   cursor: pointer;
 }
 
