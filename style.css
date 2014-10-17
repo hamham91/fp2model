@@ -1,14 +1,19 @@
 .control {
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-  margin-top: 25px;
-  margin-left: 25px;
-  margin-right: 25px;
+  width: 75px;
+  height: 75px;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin: 10px;
+  padding:10px;
+  font-family: sans-serif;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 75px;
 }
 
 .walls {
   background-color: #f00;
+  color: #fff;
 }
 .walls:hover, .walls-selected {
   background-color: #600;
@@ -17,6 +22,7 @@
 
 .doors {
   background-color: #0f0;
+  color: #fff;
 }
 .doors:hover, .doors-selected {
   background-color: #060;
@@ -25,14 +31,11 @@
 
 .windows {
   background-color: #00f;
+  color: #fff;
 }
 .windows:hover, .windows-selected {
   background-color: #006;
   cursor: pointer;
-}
-
-.doors_control, .walls_control, .windows_control {
-  float: left;
 }
 
 table {
@@ -40,7 +43,7 @@ table {
 }
 
 .tools {
-  width: 100%;
+  width: 125px;
 }
 
 .floorplan {

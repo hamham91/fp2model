@@ -32,6 +32,7 @@ window.onload = function() {
   var camera = new THREE.PerspectiveCamera( 75, 4/3, 0.1, 1000 );
 
   var currentOBJ;
+  var objFile;
 
   var renderer = new THREE.WebGLRenderer();
   
@@ -239,11 +240,12 @@ window.onload = function() {
   update();
 
   function loadOBJ() {
-    var objFile = spaceManager.exportObj();
-    console.log(objFile);
+    objFile = spaceManager.exportObj();
+    // console.log(objFile);
 
     var blob = new Blob([objFile]);
-
+    document.getElementById("objDownload").href = URL.createObjectURL(blob);
+    
     // As soon as the OBJ has been loaded this function looks for a mesh
     // inside the data and applies the texture to it.
     loader.load( URL.createObjectURL(blob), function ( event ) {
@@ -268,7 +270,5 @@ window.onload = function() {
       scene.add( object );
     });
   }
-
-  document.getElementById("gen_obj").onclick = loadOBJ;
 };
 

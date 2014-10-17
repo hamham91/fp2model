@@ -15,33 +15,27 @@
 <body>
 <h2> fp2model </h2>
 <div>
+  <a id="objDownload" download="floorplan.obj">Download OBJ</a>
+
+  <div id="mode">
+    Mode: select
+  </div>
+
   <table>
     <tr>
-      <td>
-        <div class="tools">
-          <h3>Tools</h3>
-
-          <div id="mode">
-            Mode: select
-          </div>
-
+      <td class="tools">
+        <div>
           <div class="walls_control">
-            <div id="walls" class="control walls"></div>
-            <label>Walls</label>
+            <div id="walls" class="control walls">Walls</div>
           </div>
           <div class="doors_control">
-            <div id="doors" class="control doors"></div>
-            <label>Doors</label>
+            <div id="doors" class="control doors">Doors</div>
           </div>
           <div class="windows_control">
-            <div id="windows" class="control windows"></div>
-            <label>Windows</label>
+            <div id="windows" class="control windows">Windows</div>
           </div>
-          <input id="gen_obj" type="button" value="Export OBJ" class="export" />
         </div>
       </td>
-    </tr>
-    <tr>
       <td>
         <div class="floorplan">
           <canvas id="fp2model_canvas" width="800" height = "600"> </canvas>
@@ -50,6 +44,7 @@
         <div id="preview" class="preview"></div>
       </td>
     </tr>
+    
   </table>
   
 </div>
