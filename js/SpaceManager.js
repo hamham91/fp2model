@@ -6,9 +6,9 @@ var SpaceManager = function() {
   this.useAxisAlign = true;
 
   // constants
-  this.wallHeight = 0.4;
-  this.doorHeight = 0.3;
-  this.windowMaxHeight = 0.3;
+  this.wallHeight = 0.3;
+  this.doorHeight = 0.2;
+  this.windowMaxHeight = 0.2;
   this.windowMinHeight = 0.1;
   this.wallWidth = 0.01;
 
