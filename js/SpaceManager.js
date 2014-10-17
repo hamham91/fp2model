@@ -92,6 +92,57 @@ SpaceManager.prototype.snapLineToWall = function(line, wall) {
   return snapLine;
 };
 
+function isStraightLine(p1, p2) {
+  return (p1.x === p2.x || p1.y === p2.y);
+}
+
+function checkHorizontal(p1, p2) {
+  return Math.abs(p1.x - p2.x) > Math.abs(p1.y - p2.y);
+}
+
+function offsetWall(offset, point, otherPoint) {
+  if (point.x < otherPoint.x) offset *= -1;
+  point.x += offset;
+}
+
+SpaceManager.prototype.offsetWalls = function() {
+  var pairs = [];
+  var i, len;
+  for (i = 0, len = this.normWalls.length; i < len; ++i) {
+    var ip1 = this.normWalls[i].line.p1;
+    var ip2 = this.normWalls[i].line.p2;
+    if (!isStraightLine(ip1, ip2)) continue;
+    var isIHorizontal = checkHorizontal(ip1, ip2);
+    for (j = i + 1; j < len; ++j) {
+      var jp1 = this.normWalls[j].line.p1;
+      var jp2 = this.normWalls[j].line.p2;
+
+      if (!isStraightLine(jp1, jp2)) continue;
+
+      // return if it's not a corner
+      var isJHorizontal = checkHorizontal(jp1, jp2);
+      if (isJHorizontal === isIHorizontal) continue;
+
+      if (ip1.x === jp1.x && ip1.y === jp1.y) {
+        if (isIHorizontal) offsetWall(this.wallWidth, ip1, ip2);
+        if (isJHorizontal) offsetWall(this.wallWidth, jp1, jp2);
+      }
+      else if (ip1.x === jp2.x && ip1.y === jp2.y) {
+        if (isIHorizontal) offsetWall(this.wallWidth, ip1, ip2);
+        if (isJHorizontal) offsetWall(this.wallWidth, jp2, jp1);
+      }
+      else if (ip2.x === jp1.x && ip2.y === jp1.y) {
+        if (isIHorizontal) offsetWall(this.wallWidth, ip2, ip1);
+        if (isJHorizontal) offsetWall(this.wallWidth, jp1, jp2);
+      }
+      else if (ip2.x === jp2.x && ip2.y === jp2.y) {
+        if (isIHorizontal) offsetWall(this.wallWidth, ip2, ip1);
+        if (isJHorizontal) offsetWall(this.wallWidth, jp2, jp1);
+      }
+    }
+  }
+};
+
 SpaceManager.prototype.calcNormalizedWalls = function() {
   // copy the walls array to normWalls
   this.normWalls = cloneWallArray(this.walls);
@@ -315,6 +366,7 @@ SpaceManager.prototype.writeObj = function(verts, faces) {
 
 SpaceManager.prototype.exportObj = function() {
   this.calcNormalizedWalls();
+  this.offsetWalls();
   var verts = [], faces = [];
   for (var i = 0, len = this.normWalls.length; i < len; ++i) {
     this.calcVerts(this.normWalls[i], verts, faces);
