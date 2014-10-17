@@ -32,7 +32,9 @@ SpaceManager.prototype.selectWall = function(point) {
   var walls = this.walls;
   for (var i = 0, len = walls.length; i < len; ++i) {
     var w = walls[i];
-    var upperLeft = (Math.min(w.p1.x, w.p2.x) === w.p1.x) ? w.p1.clone() : w.p2.clone();
+    var minX = Math.min(w.p1.x, w.p2.x);
+    var minY = Math.min(w.p1.y, w.p2.y);
+    var upperLeft = new Point(minX, minY); 
     upperLeft.x -= this.selectEpsilon;
     upperLeft.y -= this.selectEpsilon;
     var width = Math.abs(w.p1.x - w.p2.x) + (2 * e);
