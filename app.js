@@ -39,11 +39,11 @@ window.onload = function() {
   controls.staticMoving = true;
   controls.dynamicDampingFactor = 0.3;
 
-  var ambient = new THREE.AmbientLight( 0x333333 );
+  var ambient = new THREE.AmbientLight( 0x551133 );
   scene.add( ambient );
 
   var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-  directionalLight.position.set( 1,1,-1 ).normalize();
+  directionalLight.position.set( 1,-1,-1 ).normalize();
   scene.add( directionalLight );
 
   /*** OBJ Loading ***/
@@ -53,8 +53,9 @@ window.onload = function() {
   };
   var loader = new THREE.OBJLoader( manager );
 
-  camera.position.set(1,1,-2);
+  camera.position.set(0,0,-2);
   camera.lookAt(0,0,0);
+  camera.up = new THREE.Vector3(0, -1, 0);
 
   function render() {
     requestAnimationFrame(render);
