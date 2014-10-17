@@ -4,9 +4,24 @@ var Vec3 = function(x, y, z) {
   this.z = z;
 };
 
+Vec3.prototype.cross = function(v) {
+  return new Vec3(this.y * v.z - this.z * v.y,
+                  this.z * v.x - this.x * v.z,
+                  this.x * v.y - this.y * v.x
+  );
+};
+
 var Point = function(x, y) {
   this.x = x;
   this.y = y;
+};
+
+Point.prototype.sub = function(p) {
+  return new Point(this.x - p.x, this.y - p.y);
+};
+
+Point.prototype.cross = function(p) {
+  return (new Vec3(this.x, this.y, 0)).cross(new Vec3(p.x, p.y, 0));
 };
 
 Point.prototype.clone = function() {
@@ -30,11 +45,12 @@ var Wall = function(line) {
 
 Wall.prototype.clone = function() {
   var wall = new Wall(this.line.clone());
-  for (var i=0, len=this.doors.length; i<len; i++) {
-    wall.doors.push( this.doors[i].clone() );
+  var i, len;
+  for (i = 0, len = this.doors.length; i < len; ++i) {
+    wall.doors.push(this.doors[i].clone());
   }
-  for (var i=0, len=this.windows.length; i<len; i++) {
-    wall.windows.push( this.windows[i].clone() );
+  for (i = 0, len = this.windows.length; i < len; ++i) {
+    wall.windows.push(this.windows[i].clone());
   }
   return wall;
 };

@@ -106,6 +106,7 @@ window.onload = function() {
 
     endOfLine = new Point(mousePosition.x, mousePosition.y);
     endOfLine = spaceManager.snapPointToWall(endOfLine);
+
     if (currentMode === modes.WALLS) {
       var newWall = new Wall(new Line(startOfLine, endOfLine));
       spaceManager.addWall(newWall);
@@ -114,12 +115,14 @@ window.onload = function() {
       if (selectedWall >= 0) {
         var newDoor = new Line(startOfLine, endOfLine);
         newDoor = spaceManager.axisAlignLine(newDoor);
+        newDoor = spaceManager.snapLineToWall(newDoor, walls[selectedWall]);
         walls[selectedWall].doors.push(newDoor);
       }
     } else if (currentMode === modes.WINDOWS) {
       if (selectedWall >= 0) {
         var newWindow = new Line(startOfLine, endOfLine);
         newWindow = spaceManager.axisAlignLine(newWindow);
+        newWindow = spaceManager.snapLineToWall(newWindow, walls[selectedWall]);
         walls[selectedWall].windows.push(newWindow);
       }
     }
@@ -153,11 +156,12 @@ window.onload = function() {
       } else {
         drawLine(wall.line.p1, wall.line.p2, "#ff0000");
       }
-      for (var j=0; j<wall.doors.length; j++) {
+      var j;
+      for (j = 0; j < wall.doors.length; ++j) {
         door = wall.doors[j];
         drawLine(door.p1, door.p2, "#00ff00");
       }
-      for (var j=0; j<wall.windows.length; j++) {
+      for (j = 0; j < wall.windows.length; ++j) {
         win = wall.windows[j];
         drawLine(win.p1, win.p2, "#0000ff");
       }
