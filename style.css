@@ -12,6 +12,7 @@
 }
 .walls:hover, .walls-selected {
   background-color: #600;
+  cursor: pointer;
 }
 
 .doors {
@@ -19,6 +20,7 @@
 }
 .doors:hover, .doors-selected {
   background-color: #060;
+  cursor: pointer;
 }
 
 .windows {
@@ -26,6 +28,7 @@
 }
 .windows:hover, .windows-selected {
   background-color: #006;
+  cursor: pointer;
 }
 
 .tools {
@@ -34,7 +37,7 @@
 }
 
 .floorplan {
-  float: none;
+  float: left;
 }
 
 .export {
@@ -47,6 +50,5 @@ canvas {
 }
 
 label {
-  margin-left: auto;
-  margin-right: auto;
+  display: inline;
 }
