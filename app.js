@@ -85,6 +85,7 @@ window.onload = function() {
       walls_control.classList.remove('walls-selected');
     } else {
       currentMode = modes.WALLS;
+      selectedWall = -1;
       walls_control.classList.add('walls-selected');
       doors_control.classList.remove('doors-selected');
       windows_control.classList.remove('windows-selected');
@@ -150,8 +151,8 @@ window.onload = function() {
 
     if (currentMode === modes.WALLS) {
       var newWall = new Wall(new Line(startOfLine, endOfLine));
+      selectedWall = walls.length; 
       spaceManager.addWall(newWall);
-      document.getElementById('wall_list').innerHTML += "<li> Start[" + startOfLine.x + ", " + startOfLine.y + "] End[" + endOfLine.x + ", " + endOfLine.y + "] </li>"; 
     } else if (currentMode === modes.DOORS) {
       if (selectedWall >= 0) {
         var newDoor = new Line(startOfLine, endOfLine);
