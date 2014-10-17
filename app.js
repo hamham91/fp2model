@@ -147,7 +147,9 @@ window.onload = function() {
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
     startOfLine = new Point(mousePosition.x, mousePosition.y);
-    startOfLine = spaceManager.snapPointToWall(startOfLine);
+    if (currentMode === modes.WALLS) {
+      startOfLine = spaceManager.snapPointToWall(startOfLine);
+    }
   });
 
   context.canvas.addEventListener('mouseup', function(e) {
@@ -157,7 +159,9 @@ window.onload = function() {
     var walls = spaceManager.getWalls();
 
     endOfLine = new Point(mousePosition.x, mousePosition.y);
-    endOfLine = spaceManager.snapPointToWall(endOfLine);
+    if (currentMode === modes.WALLS) {
+      endOfLine = spaceManager.snapPointToWall(endOfLine);
+    }
 
     if (currentMode === modes.WALLS) {
       var newWall = new Wall(new Line(startOfLine, endOfLine));
