@@ -22,7 +22,8 @@ var SpaceManager = function() {
 
 SpaceManager.prototype.addWall = function(wall) {
   if (this.useAxisAlign) {
-    wall = this.axisAlignWall(wall);
+    var line = new Line(wall.line.p1, wall.line.p2);
+    line = this.axisAlignLine(line);
   }
   this.walls.push(wall);
 };
@@ -37,8 +38,8 @@ SpaceManager.prototype.selectWall = function(point) {
     var upperLeft = new Point(minX, minY); 
     upperLeft.x -= this.selectEpsilon;
     upperLeft.y -= this.selectEpsilon;
-    var width = Math.abs(w.p1.x - w.p2.x) + (2 * e);
-    var height = Math.abs(w.p1.y - w.p2.y) + (2 * e);
+    var width = Math.abs(wall.line.p1.x - wall.line.p2.x) + (2 * e);
+    var height = Math.abs(wall.line.p1.y - wall.line.p2.y) + (2 * e);
     if (point.x > upperLeft.x && point.x < upperLeft.x + width &&
         point.y > upperLeft.y && point.y < upperLeft.y + height) {
       return i;
@@ -51,28 +52,28 @@ SpaceManager.prototype.getWalls = function() {
   return this.walls;
 };
 
-SpaceManager.prototype.axisAlignWall = function(wall) {
-  if (Math.abs(wall.p1.x - wall.p2.x) < this.axisAlignEpsilon) {
-    wall.p2.x = wall.p1.x;
+SpaceManager.prototype.axisAlignLine = function(line) {
+  if (Math.abs(line.p1.x - line.p2.x) < this.axisAlignEpsilon) {
+    line.p2.x = line.p1.x;
   }
-  if (Math.abs(wall.p1.y - wall.p2.y) < this.axisAlignEpsilon) {
-    wall.p2.y = wall.p1.y;
+  if (Math.abs(line.p1.y - line.p2.y) < this.axisAlignEpsilon) {
+    line.p2.y = line.p1.y;
   }
-  return wall;
+  return line;
 };
 
 SpaceManager.prototype.snapPointToWall = function(point) {
   var snapPoint = null;
   var walls = this.walls;
   for (var i = 0, len = walls.length; i < len; ++i) {
-    if (Math.abs(walls[i].p1.x - point.x) < this.snappingEpsilon &&
-        Math.abs(walls[i].p1.y - point.y) < this.snappingEpsilon) {
-      snapPoint = walls[i].p1.clone();
+    if (Math.abs(walls[i].line.p1.x - point.x) < this.snappingEpsilon &&
+        Math.abs(walls[i].line.p1.y - point.y) < this.snappingEpsilon) {
+      snapPoint = walls[i].line.p1.clone();
       break;
     }
-    if (Math.abs(walls[i].p2.x - point.x) < this.snappingEpsilon &&
-        Math.abs(walls[i].p2.y - point.y) < this.snappingEpsilon) {
-      snapPoint = walls[i].p2.clone();
+    if (Math.abs(walls[i].line.p2.x - point.x) < this.snappingEpsilon &&
+        Math.abs(walls[i].line.p2.y - point.y) < this.snappingEpsilon) {
+      snapPoint = walls[i].line.p2.clone();
       break;
     }
   }
@@ -88,16 +89,16 @@ SpaceManager.prototype.calcNormalizedWalls = function() {
   var minX = Infinity, minY = Infinity;
   for (i = 0, len = this.normWalls.length; i < len; ++i) {
     // determine max
-    if (this.normWalls[i].p1.x > maxX) maxX = this.normWalls[i].p1.x;
-    if (this.normWalls[i].p2.x > maxX) maxX = this.normWalls[i].p2.x;
-    if (this.normWalls[i].p1.y > maxY) maxY = this.normWalls[i].p1.y;
-    if (this.normWalls[i].p2.y > maxY) maxY = this.normWalls[i].p2.y;
+    if (this.normWalls[i].line.p1.x > maxX) maxX = this.normWalls[i].line.p1.x;
+    if (this.normWalls[i].line.p2.x > maxX) maxX = this.normWalls[i].line.p2.x;
+    if (this.normWalls[i].line.p1.y > maxY) maxY = this.normWalls[i].line.p1.y;
+    if (this.normWalls[i].line.p2.y > maxY) maxY = this.normWalls[i].line.p2.y;
 
     // determine min
-    if (this.normWalls[i].p1.x < minX) minX = this.normWalls[i].p1.x;
-    if (this.normWalls[i].p2.x < minX) minX = this.normWalls[i].p2.x;
-    if (this.normWalls[i].p1.y < minY) minY = this.normWalls[i].p1.y;
-    if (this.normWalls[i].p2.y < minY) minY = this.normWalls[i].p2.y;
+    if (this.normWalls[i].line.p1.x < minX) minX = this.normWalls[i].line.p1.x;
+    if (this.normWalls[i].line.p2.x < minX) minX = this.normWalls[i].line.p2.x;
+    if (this.normWalls[i].line.p1.y < minY) minY = this.normWalls[i].line.p1.y;
+    if (this.normWalls[i].line.p2.y < minY) minY = this.normWalls[i].line.p2.y;
   }
   var rangeX = maxX - minX;
   if (!rangeX) {
@@ -114,20 +115,20 @@ SpaceManager.prototype.calcNormalizedWalls = function() {
 
   // normalize points
   for (i = 0, len = this.normWalls.length; i < len; ++i) {
-    this.normWalls[i].p1.x = (this.normWalls[i].p1.x - minX) / range;
-    this.normWalls[i].p2.x = (this.normWalls[i].p2.x - minX) / range;
-    this.normWalls[i].p1.y = (this.normWalls[i].p1.y - minY) / range;
-    this.normWalls[i].p2.y = (this.normWalls[i].p2.y - minY) / range;
+    this.normWalls[i].line.p1.x = (this.normWalls[i].line.p1.x - minX) / range;
+    this.normWalls[i].line.p2.x = (this.normWalls[i].line.p2.x - minX) / range;
+    this.normWalls[i].line.p1.y = (this.normWalls[i].line.p1.y - minY) / range;
+    this.normWalls[i].line.p2.y = (this.normWalls[i].line.p2.y - minY) / range;
   }
 };
 
 SpaceManager.prototype.calcVerts = function(wall, verts, faces) {
   var offset = verts.length;
 
-  verts.push(new Vec3(wall.p1.x, wall.p1.y, 0));
-  verts.push(new Vec3(wall.p1.x, wall.p1.y, this.wallHeight));
-  verts.push(new Vec3(wall.p2.x, wall.p2.y, 0)); 
-  verts.push(new Vec3(wall.p2.x, wall.p2.y, this.wallHeight));
+  verts.push(new Vec3(wall.line.p1.x, wall.line.p1.y, 0));
+  verts.push(new Vec3(wall.line.p1.x, wall.line.p1.y, this.wallHeight));
+  verts.push(new Vec3(wall.line.p2.x, wall.line.p2.y, 0)); 
+  verts.push(new Vec3(wall.line.p2.x, wall.line.p2.y, this.wallHeight));
 
   faces.push(new Vec3(offset + 1, offset + 3, offset + 2));
   faces.push(new Vec3(offset + 3, offset + 4, offset + 2));
