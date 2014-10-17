@@ -39,7 +39,7 @@ SpaceManager.prototype.selectWall = function(point) {
     var height = Math.abs(w.p1.y - w.p2.y) + (2 * e);
     if (point.x > upperLeft.x && point.x < upperLeft.x + width &&
         point.y > upperLeft.y && point.y < upperLeft.y + height) {
-      return w;
+      return i;
     }
   }
   return null;

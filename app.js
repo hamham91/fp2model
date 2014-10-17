@@ -15,6 +15,8 @@ window.onload = function() {
   var startOfLine = null;
   var endOfLine = null;
 
+  var selectedWall = -1;
+
   var canvas = document.getElementById('fp2model_canvas');
   var context = canvas.getContext('2d');
 
@@ -121,9 +123,8 @@ window.onload = function() {
   context.canvas.addEventListener('click', function(e) {
     if (currentMode !== modes.SELECT) return;
     mousePosition = getMousePosition(e);
-    var wall = spaceManager.selectWall(mousePosition);
-    console.log("SELECTED", wall);
-  });
+    selectedWall = spaceManager.selectWall(mousePosition);
+    });
 
   function drawLine(p1, p2, color) {
       context.beginPath();
@@ -141,7 +142,11 @@ window.onload = function() {
     var wall, door, win;
     for (var i = 0; i < walls.length; i++) {
       wall = walls[i];
-      drawLine(wall.p1, wall.p2, "#ff0000");
+      if (i === selectedWall) {
+        drawLine(wall.p1, wall.p2, "#ffff00");
+      } else {
+        drawLine(wall.p1, wall.p2, "#ff0000");
+      }
       for (var j=0; j<wall.doors.length; j++) {
         door = wall.doors[j];
         drawLine(door.p1, door.p2, "#00ff00");
