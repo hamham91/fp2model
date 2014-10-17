@@ -201,10 +201,29 @@ function makePlane(p1, p2, verts, faces, zLow, zHigh, wallWidth) {
     verts.push(new Vec3(p2.x, p2.y - wallWidth, zHigh));
   }
 
+  // create front wall
   faces.push(new Vec3(offset1 + 1, offset1 + 3, offset1 + 2));
   faces.push(new Vec3(offset1 + 3, offset1 + 4, offset1 + 2));
+
+  // create back wall
   faces.push(new Vec3(offset2 + 1, offset2 + 2, offset2 + 3));
   faces.push(new Vec3(offset2 + 3, offset2 + 2, offset2 + 4));
+
+  // create top cap
+  faces.push(new Vec3(offset2 + 4, offset1 + 2, offset1 + 4));
+  faces.push(new Vec3(offset2 + 2, offset1 + 2, offset2 + 4));
+
+  // create bottom cap
+  faces.push(new Vec3(offset2 + 1, offset1 + 3, offset1 + 1));
+  faces.push(new Vec3(offset2 + 1, offset2 + 3, offset1 + 3));
+
+  // create left side
+  faces.push(new Vec3(offset2 + 1, offset1 + 2, offset2 + 2));
+  faces.push(new Vec3(offset2 + 1, offset1 + 1, offset1 + 2));
+
+  // create right side
+  faces.push(new Vec3(offset1 + 3, offset2 + 4, offset1 + 4));
+  faces.push(new Vec3(offset1 + 3, offset2 + 3, offset2 + 4));
 }
 
 function makeWall(p1, p2, verts, faces, wallHeight, wallWidth) {
