@@ -230,7 +230,7 @@ function makeWall(p1, p2, verts, faces, wallHeight, wallWidth) {
 }
 
 function makeDoor(p1, p2, verts, faces, doorHeight, wallHeight, wallWidth) {
-  makePlane(p1, p2, verts, faces, doorHeight, wallHeight, wallWidth);
+  makePlane(p1, p2, verts, faces, wallHeight, doorHeight, wallWidth);
 }
 
 function makeWindow(p1, p2, verts, faces, winMinHeight, winMaxHeight, wallHeight, wallWidth) {
