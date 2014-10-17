@@ -31,9 +31,16 @@
   cursor: pointer;
 }
 
-.tools {
+.doors_control, .walls_control, .windows_control {
   float: left;
-  width: 150px;
+}
+
+table {
+  width: 100%;
+}
+
+.tools {
+  width: 100%;
 }
 
 .floorplan {

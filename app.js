@@ -19,6 +19,14 @@ window.onload = function() {
 
   var canvas = document.getElementById('fp2model_canvas');
   var context = canvas.getContext('2d');
+  var img = new Image();
+  img.onload = function() {
+    context.canvas.width = img.width;
+    context.canvas.height = img.height;
+    context.drawImage(img, 0, 0);
+    renderer.setSize( canvas.width, canvas.height );
+  };
+  img.src = "./assets/fp1.jpg";
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera( 75, 4/3, 0.1, 1000 );
@@ -26,7 +34,7 @@ window.onload = function() {
   var currentOBJ;
 
   var renderer = new THREE.WebGLRenderer();
-  renderer.setSize( 400, 300 );
+  
   renderer.setClearColor( 0xffffff, 1);
   document.getElementById('preview').appendChild(renderer.domElement);
 
@@ -53,9 +61,15 @@ window.onload = function() {
   };
   var loader = new THREE.OBJLoader( manager );
 
-  camera.position.set(0,0,-2);
+  camera.position.set(0,0,-1);
   camera.lookAt(0,0,0);
   camera.up = new THREE.Vector3(0, -1, 0);
+
+  var plane = new THREE.Mesh(new THREE.PlaneGeometry(20,20), new THREE.MeshNormalMaterial());
+  plane.position.set(0,0,0.2);
+  var norm = new THREE.Vector3(0, 0, -1);
+  plane.lookAt(norm);
+  scene.add(plane);
 
   function render() {
     requestAnimationFrame(render);
@@ -63,15 +77,6 @@ window.onload = function() {
     renderer.render(scene, camera);
   }
   render();
-
-
-  var img = new Image();
-  img.onload = function() {
-    context.canvas.width = img.width;
-    context.canvas.height = img.height;
-    context.drawImage(img, 0, 0);
-  };
-  img.src = "./assets/fp1.jpg";
 
   var walls_control = document.getElementById("walls");
   var doors_control = document.getElementById("doors");
