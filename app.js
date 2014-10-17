@@ -244,7 +244,11 @@ window.onload = function() {
   }
   update();
 
+  document.getElementById("thickness").onchange = loadOBJ;
+
   function loadOBJ() {
+    var thickness = parseInt(document.getElementById("thickness").value);
+    spaceManager.wallWidth *= thickness;
     objFile = spaceManager.exportObj();
     // console.log(objFile);
 
