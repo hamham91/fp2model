@@ -95,7 +95,7 @@ window.onload = function() {
     if (currentMode === modes.SELECT) return;
     mousePosition = getMousePosition(e);
     startOfLine = new Point(mousePosition.x, mousePosition.y);
-    if (currentMode === modes.WALLS) startOfLine = spaceManager.snapPointToWall(startOfLine);
+    startOfLine = spaceManager.snapPointToWall(startOfLine);
   });
 
   context.canvas.addEventListener('mouseup', function(e) {
@@ -105,17 +105,23 @@ window.onload = function() {
     var walls = spaceManager.getWalls();
 
     endOfLine = new Point(mousePosition.x, mousePosition.y);
+    endOfLine = spaceManager.snapPointToWall(endOfLine);
     if (currentMode === modes.WALLS) {
-      endOfLine = spaceManager.snapPointToWall(endOfLine);
-      var newWall = new Wall(startOfLine, endOfLine);
-      spaceManager.addWall(new Wall(startOfLine, endOfLine));
+      var newWall = new Wall(new Line(startOfLine, endOfLine));
+      spaceManager.addWall(newWall);
       document.getElementById('wall_list').innerHTML += "<li> Start[" + startOfLine.x + ", " + startOfLine.y + "] End[" + endOfLine.x + ", " + endOfLine.y + "] </li>"; 
     } else if (currentMode === modes.DOORS) {
-      var newDoor = new Line(startOfLine, endOfLine);
-      walls[0].doors.push(newDoor);
+      if (selectedWall >= 0) {
+        var newDoor = new Line(startOfLine, endOfLine);
+        newDoor = spaceManager.axisAlignLine(newDoor);
+        walls[selectedWall].doors.push(newDoor);
+      }
     } else if (currentMode === modes.WINDOWS) {
-      var newWindow = new Line(startOfLine, endOfLine);
-      walls[0].windows.push(newWindow);
+      if (selectedWall >= 0) {
+        var newWindow = new Line(startOfLine, endOfLine);
+        newWindow = spaceManager.axisAlignLine(newWindow);
+        walls[selectedWall].windows.push(newWindow);
+      }
     }
     startOfLine = endOfLine = null;
   });
@@ -124,7 +130,7 @@ window.onload = function() {
     if (currentMode !== modes.SELECT) return;
     mousePosition = getMousePosition(e);
     selectedWall = spaceManager.selectWall(mousePosition);
-    });
+  });
 
   function drawLine(p1, p2, color) {
       context.beginPath();
@@ -143,9 +149,9 @@ window.onload = function() {
     for (var i = 0; i < walls.length; i++) {
       wall = walls[i];
       if (i === selectedWall) {
-        drawLine(wall.p1, wall.p2, "#ffff00");
+        drawLine(wall.line.p1, wall.line.p2, "#ffff00");
       } else {
-        drawLine(wall.p1, wall.p2, "#ff0000");
+        drawLine(wall.line.p1, wall.line.p2, "#ff0000");
       }
       for (var j=0; j<wall.doors.length; j++) {
         door = wall.doors[j];
