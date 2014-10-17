@@ -23,11 +23,14 @@ window.onload = function() {
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera( 75, 4/3, 0.1, 1000 );
 
+  var currentOBJ;
+
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize( 400, 300 );
+  renderer.setClearColor( 0xffffff, 1);
   document.getElementById('preview').appendChild(renderer.domElement);
 
-  var controls = new THREE.TrackballControls( camera );
+  var controls = new THREE.TrackballControls( camera, renderer.domElement );
   controls.rotateSpeed = 5.0;
   controls.zoomSpeed = 5;
   controls.panSpeed = 2;
@@ -40,7 +43,7 @@ window.onload = function() {
   scene.add( ambient );
 
   var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-  directionalLight.position.set( 0, 0, 1 ).normalize();
+  directionalLight.position.set( 1,1,-1 ).normalize();
   scene.add( directionalLight );
 
   /*** OBJ Loading ***/
@@ -50,7 +53,7 @@ window.onload = function() {
   };
   var loader = new THREE.OBJLoader( manager );
 
-  camera.position.set(2,0,2);
+  camera.position.set(1,1,-2);
   camera.lookAt(0,0,0);
 
   function render() {
@@ -238,17 +241,24 @@ window.onload = function() {
     // As soon as the OBJ has been loaded this function looks for a mesh
     // inside the data and applies the texture to it.
     loader.load( URL.createObjectURL(blob), function ( event ) {
-      var object = event;  
-      console.log("LOADED");
+      var object = event;
 
       object.traverse( function ( child ) {
         if ( child instanceof THREE.Mesh ) {
           child.material.color.setRGB(0.6, 0.2, 0.8);
+          child.material.side = THREE.DoubleSide;
+          child.geometry.center();
         }
       } );
    
       // object.scale = new THREE.Vector3( 25, 25, 25 );
    
+      if (currentOBJ) {
+        scene.remove(currentOBJ);
+      }
+
+      currentOBJ = object;
+
       scene.add( object );
     });
   }
