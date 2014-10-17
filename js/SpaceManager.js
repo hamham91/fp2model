@@ -61,7 +61,7 @@ SpaceManager.prototype.axisAlignLine = function(line) {
 };
 
 SpaceManager.prototype.snapPointToWall = function(point) {
-  var snapPoint = null;
+  var snapPoint = null, isHorizontal;
   var walls = this.walls;
   for (var i = 0, len = walls.length; i < len; ++i) {
     if (Math.abs(walls[i].line.p1.x - point.x) < this.snappingEpsilon &&
@@ -89,7 +89,6 @@ SpaceManager.prototype.snapLineToWall = function(line, wall) {
     snapLine.p1.x = wall.line.p1.x + (snapLine.p1.y - wall.line.p1.y) / slope;
     snapLine.p2.x = wall.line.p2.x + (snapLine.p2.y - wall.line.p2.y) / slope;
   }
-  console.log("WALL P1 Y:", line.p1.y, "WALL P2 Y:", line.p2.y, "SNAP P1 Y:", snapLine.p1.y, "SNAP P2 Y:", snapLine.p2.y);
   return snapLine;
 };
 
