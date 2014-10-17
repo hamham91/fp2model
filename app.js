@@ -20,6 +20,50 @@ window.onload = function() {
   var canvas = document.getElementById('fp2model_canvas');
   var context = canvas.getContext('2d');
 
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera( 75, 4/3, 0.1, 1000 );
+
+  var currentOBJ;
+
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setSize( 400, 300 );
+  renderer.setClearColor( 0xffffff, 1);
+  document.getElementById('preview').appendChild(renderer.domElement);
+
+  var controls = new THREE.TrackballControls( camera, renderer.domElement );
+  controls.rotateSpeed = 5.0;
+  controls.zoomSpeed = 5;
+  controls.panSpeed = 2;
+  controls.noZoom = false;
+  controls.noPan = false;
+  controls.staticMoving = true;
+  controls.dynamicDampingFactor = 0.3;
+
+  var ambient = new THREE.AmbientLight( 0x333333 );
+  scene.add( ambient );
+
+  var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+  directionalLight.position.set( 1,1,-1 ).normalize();
+  scene.add( directionalLight );
+
+  /*** OBJ Loading ***/
+  var manager = new THREE.LoadingManager();
+  manager.onProgress = function ( item, loaded, total ) {
+    console.log( item, loaded, total );
+  };
+  var loader = new THREE.OBJLoader( manager );
+
+  camera.position.set(1,1,-2);
+  camera.lookAt(0,0,0);
+
+  function render() {
+    requestAnimationFrame(render);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  render();
+
+
   var img = new Image();
   img.onload = function() {
     context.canvas.width = img.width;
@@ -127,7 +171,11 @@ window.onload = function() {
         walls[selectedWall].windows.push(newWindow);
       }
     }
+
     startOfLine = endOfLine = null;
+    
+    loadOBJ();
+
   });
 
   context.canvas.addEventListener('click', function(e) {
@@ -184,9 +232,37 @@ window.onload = function() {
   }
   update();
 
-  document.getElementById("gen_obj").onclick = function(e) {
+  function loadOBJ() {
     var objFile = spaceManager.exportObj();
     console.log(objFile);
-  };
+
+    var blob = new Blob([objFile]);
+
+    // As soon as the OBJ has been loaded this function looks for a mesh
+    // inside the data and applies the texture to it.
+    loader.load( URL.createObjectURL(blob), function ( event ) {
+      var object = event;
+
+      object.traverse( function ( child ) {
+        if ( child instanceof THREE.Mesh ) {
+          child.material.color.setRGB(0.6, 0.2, 0.8);
+          child.material.side = THREE.DoubleSide;
+          child.geometry.center();
+        }
+      } );
+   
+      // object.scale = new THREE.Vector3( 25, 25, 25 );
+   
+      if (currentOBJ) {
+        scene.remove(currentOBJ);
+      }
+
+      currentOBJ = object;
+
+      scene.add( object );
+    });
+  }
+
+  document.getElementById("gen_obj").onclick = loadOBJ;
 };
 

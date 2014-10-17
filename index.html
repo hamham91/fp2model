@@ -3,6 +3,10 @@
 <head>
   <title> fp2model </title>
   <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/javascript" src="js/three.min.js"></script>
+  <script type="text/javascript" src="js/TrackballControls.js"></script>
+  <script type="text/javascript" src="js/OBJLoader.js"></script>
+  <script type="text/javascript" src="js/Detector.js"></script>
   <script type="text/javascript" src="js/Primitives.js"></script>
   <script type="text/javascript" src="js/SpaceManager.js"></script>
   <script type="text/javascript" src="app.js"></script>
@@ -36,7 +40,8 @@
   <div class="floorplan">
     <canvas id="fp2model_canvas" width="800" height = "600"> </canvas>
   </div>
-  
+
+  <div id="preview" class="preview"></div>
 </div>
 
 </body>
